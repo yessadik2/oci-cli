@@ -10,7 +10,7 @@ steps:
   - type: Command
     name: "test"
     command: |
-      docker run --rm -d -v $(pwd)/temp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server --server-host 0.0.0.0
+      docker run --rm -d --user root --network "host" -v $(pwd)/temp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server
       echo 'Finished docker image pull'
       curl "http://localhost:9090/sbom?url=https://github.com/oracle/oci-cli.git&multiProject=true&type=python" > artifactSBOM.json
 outputArtifacts:
