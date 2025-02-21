@@ -1,0 +1,18 @@
+version: 0.1
+component: build
+timeoutInSeconds: 1000
+shell: bash
+env:
+  variables:
+    PYTHON_CMD: "python3"
+    CDXGEN_DEBUG_MODE: "debug"
+steps:
+  - type: Command
+    name: "Download the version 10.10.0 of cdxgen globally"
+    command: |
+      docker run --rm -v $(pwd)/temp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server --server-host 0.0.0.0
+      curl "http://127.0.0.1:9090/sbom?url=https://github.com/oracle/oci-cli.git&multiProject=true&type=python" > artifactSBOM.json
+outputArtifacts:
+  - name: artifactSBOM
+    type: BINARY
+    location: ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
